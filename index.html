@@ -1,11 +1,45 @@
 <html>
     <head>
-        <title>secondubly's iframe</title>
-        <script src="js/clippy.js" type="text/javascript"></script>
+        <title>Shoutout Clips by secondubly</title>
+            <script src="/socket.io/socket.io.js"></script>
+            <script src="/js/clippy.js" type="text/javascript"></script>
+            <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet"> 
+        <style type="text/css">
+        iframe {
+            border: 0;
+        }
+        #clip-container {
+            display: none;
+        }
+        </style>
     </head>
     <body>
-        Check out “username here”
-        <br/>
-        <iframe id="streamer-highlight" width="640" height="480"></iframe>
+        <div id="clip-container">
+            Check out <span id="username"></span>
+            <br/>
+            <iframe id="stream-clip" width="1280" height="720">
+            </iframe>
+        </div>
+        <script>
+            let socket = io();
+            socket.on('shoutout', (response) => {
+                // check to make sure the event is for your channel
+                const streamer = response.streamer;
+                const host = '/' + response.host;
+                if (!streamer || !window.location.href.includes(host)) { 
+                    return; // if the event is not for your channel, return early
+                }
+
+                let channel = document.querySelector("#username");
+                channel.textContent = streamer;
+                getClips(streamer).then(_ => {
+                    console.log(topClips);
+                    const clip_data = getRandomClip(topClips);
+                    console.log(clip_data);
+                    setClip(true, clip_data);
+                }).catch(console.error());
+            });
+        </script>
     </body>
 </html>
