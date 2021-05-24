@@ -62,7 +62,7 @@ async function setClip(visible, clip) {
 
         // Example Clip URL:
         // https://clips.twitch.tv/embed?clip=ShakingPoliteQuailGingerPower&tt_medium=clips_api&tt_content=embed
-        const clip_url = `http://clips.twitch.tv/embed?clip=${clip.slug}&tt_medium-clips_api&tt_content=embed&parent=${window.location.hostname}&autoplay=true`
+        const clip_url = `https://clips.twitch.tv/embed?clip=${clip.slug}&tt_medium-clips_api&tt_content=embed&parent=${window.location.hostname}&autoplay=true`
 
         // display container and iframe
         frame.setAttribute('src', clip_url);
