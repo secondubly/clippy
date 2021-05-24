@@ -1,8 +1,8 @@
 <html>
     <head>
         <title>Shoutout Clips by secondubly</title>
-            <script src="/socket.io/socket.io.js"></script>
-            <script src="/js/clippy.js" type="text/javascript"></script>
+            <script type="text/javascript" src="https://secondubly.tv/clippy/socket.io/socket.io.js"></script>
+            <script type="text/javascript" src="/clippy/js/clippy.js"></script>
             <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet"> 
         <style type="text/css">
@@ -43,7 +43,7 @@
             </iframe>
         </div>
         <script>
-            let socket = io();
+            let socket = io.connect('https://secondubly.tv/', {path: "/clippy/socket.io"});
             socket.on('shoutout', (response) => {
                 // check to make sure the event is for your channel
                 const streamer = response.streamer;
@@ -55,8 +55,9 @@
                 channel.textContent = streamer;
                 getClips(streamer).then(_ => {
                     const clip_data = getRandomClip(topClips);
-                    setClip(true, clip_data).catch();
-                }).catch(console.error());
+                    setClip(true, clip_data);
+                    // TODO: log the clip name and streamer to server side
+                }).catch((err) => {console.error(err) });
             });
         </script>
     </body>
