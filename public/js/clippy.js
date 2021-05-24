@@ -1,11 +1,11 @@
 let topClips = [];
 let distribution = {}; // for testing purposes
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
-async function getClips(username, limit = 100, period = 'all', weighted = true, trending = false) {
-    // TODO: sanitize input
+async function getClips(username, limit = 100, period = 'all', duration_limit = 15, weighted = true, trending = false) {
     // Note: await/async unsupported in some older browsers (IE/Opera?)
     let url = `https://api.twitch.tv/kraken/clips/top?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
-    console.log(url);
+
     const data = await fetch(`https://api.twitch.tv/kraken/clips/top?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`, {
         method: 'GET',
         headers: {
@@ -14,12 +14,10 @@ async function getClips(username, limit = 100, period = 'all', weighted = true, 
             'Accept': 'application/vnd.twitchtv.v5+json'
         }
     }).then(res => res.json());
-    console.log(data.clips);
     if (data.clips.length < 1) { return; } // if we don't have any clips, return early
 
     // if the clip is longer than the duration limit, we don't want it
-    topClips = data.clips
-    // topClips = data.clips.filter(clip => clip.duration < duration_limit);
+    topClips = data.clips.filter(clip => clip.duration < duration_limit);
 }
 
 function getRandomClip(clips, percentage = 0.50) {
@@ -57,9 +55,8 @@ function getRandomClip(clips, percentage = 0.50) {
     // return clips.length - 1; // for testing purposes
 }
 
-function setClip(visible, clip) {
+async function setClip(visible, clip) {
     if (visible) {
-        console.log(clip);
         let frame = document.querySelector("#stream-clip")
         let container = document.querySelector('#clip-container');
 
@@ -69,9 +66,9 @@ function setClip(visible, clip) {
 
         // display container and iframe
         frame.setAttribute('src', clip_url);
-        frame.style.display = 'block';
+        frame.setAttribute('allowfullscreen', true);
+        container.classList.add('show')
 
-        container.style.display = 'block';
         setTimeout(() => {
             // auto-hide clip after it finishes
             setClip(false, null);
@@ -82,11 +79,11 @@ function setClip(visible, clip) {
         let frame = document.querySelector("#stream-clip");
 
         // hide container
-        container.style.display = 'none';
+        container.classList.remove('show')
 
-        // hide iframe
+        // remove iframe content after 3 seconds
+        await delay(3000);
         frame.setAttribute('src', '');
-        frame.style.display = 'none';
     }
 }
 
