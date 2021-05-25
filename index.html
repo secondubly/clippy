@@ -55,9 +55,10 @@
                 channel.textContent = streamer;
                 getClips(streamer).then(_ => {
                     const clip_data = getRandomClip(topClips);
-                    setClip(true, clip_data);
+                    // if we don't have a clip, do nothing
+                    if(clip_data) { setClip(true, clip_data); }
                     // TODO: log the clip name and streamer to server side
-                }).catch((err) => {console.error(err) });
+                }).catch((err) => { console.error(err) });
             });
         </script>
     </body>
