@@ -68,11 +68,11 @@ async function setClip(visible, clip) {
         // display container and iframe
         frame.setAttribute('src', clip_url);
         frame.setAttribute('allowfullscreen', true);
-        // wait like half a second
-        await delay(500);
+        // wait a second!
+        await delay(1000);
         container.classList.add('show')
 
-        const duration = (clip.duration * 1000) + 1000; // add an extra second to show the entire clip
+        const duration = (clip.duration * 1000); // add an extra second to show the entire clip
         setTimeout(() => {
             // auto-hide clip after it finishes
             setClip(false, null);
@@ -86,7 +86,7 @@ async function setClip(visible, clip) {
         container.classList.remove('show')
 
         // remove iframe content after 3 seconds
-        await delay(3000);
+        await delay(500);
         frame.setAttribute('src', '');
     }
 }
