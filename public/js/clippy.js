@@ -2,6 +2,7 @@ let topClips = [];
 let distribution = {}; // for testing purposes
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
+// TODO: add support for duration parameter
 async function getClips(username, limit = 100, period = 'all', duration_limit = 15, weighted = true, trending = false) {
     // Note: await/async unsupported in some older browsers (IE/Opera?)
     let url = `https://api.twitch.tv/kraken/clips/top?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
@@ -69,10 +70,11 @@ async function setClip(visible, clip) {
         frame.setAttribute('allowfullscreen', true);
         container.classList.add('show')
 
+        const duration = (clip.duration * 1000) + 1000; // add an extra second to show the entire clip
         setTimeout(() => {
             // auto-hide clip after it finishes
             setClip(false, null);
-        }, clip.duration * 1000);
+        }, duration);
     } else {
         // Don't show clip box
         let container = document.querySelector('#clip-container');
