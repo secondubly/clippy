@@ -68,6 +68,8 @@ async function setClip(visible, clip) {
         // display container and iframe
         frame.setAttribute('src', clip_url);
         frame.setAttribute('allowfullscreen', true);
+        // wait like half a second
+        await delay(500);
         container.classList.add('show')
 
         const duration = (clip.duration * 1000) + 1000; // add an extra second to show the entire clip
