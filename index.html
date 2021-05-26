@@ -54,7 +54,7 @@
                 let channel = document.querySelector("#username");
                 channel.textContent = streamer;
                 getClips(streamer).then(_ => {
-                    const clip_data = getRandomClip(topClips);
+                    const clip_data = getRandomWeightedClip(topClips);
                     // if we don't have a clip, do nothing
                     if(clip_data) { setClip(true, clip_data); }
                     // TODO: log the clip name and streamer to server side
