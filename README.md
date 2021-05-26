@@ -13,7 +13,7 @@ Below I've included steps to use this as a command in some popular Twitch bots, 
 2. In the `Response` field, select `URL Fetch - Full (plain) response`.
 3. In the `URL to fetch (*)` field, type the following: `https://secondubly.tv/clippy/<Username of the channel>?streamer=Command argument 1`, it should look something like this:
 
-`<url to photo>`
+![Moobot Example](moobot.png)
 
 4. That's it! You can save and use the command as follows: `!clippy secondubly`
 
