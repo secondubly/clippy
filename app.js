@@ -19,7 +19,7 @@ app.get('/clippy/:host', (req, res) => {
     if(isBlank(req.query.streamer) && req.params.host) {
         res.sendFile('index.html', { root: __dirname });
     } else {
-        io.emit('shoutout', { host: req.params.host, streamer: req.query.streamer });
+        io.emit('shoutout', { host: req.params.host, streamer: req.query.streamer, duration: req.query.duration });
         // res.sendStatus(200);        
         res.end();
     }
