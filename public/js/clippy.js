@@ -21,9 +21,8 @@ async function getClips(username, limit = 100, period = 'all', duration_limit = 
     topClips = data.clips.filter(clip => clip.duration < duration_limit);
 }
 
-function getRandomClip(clips, percentage = 0.50) {
+function getRandomWeightedClip(clips, percentage = 0.50) {
     // first generate the weight for each clip
-    // weights = [0, .7, .2, .0523...]
     let weights = [0]; // holds the weights for each clip (skipping position 0)
     let total_weight = 0;
     
