@@ -27,3 +27,10 @@ Below I've included steps to use this as a command in some popular Twitch bots, 
 2. Create a custom command (for this example we will be using `!clippy`)
 3. In the response field, type the following: `(customapi $(urlfetch https://secondubly.tv/clippy/$(channel)?streamer=$(1)))`
 4. That's it! You can use the command as follows: `!clippy secondubly`
+
+## Streamlabs Chat Bot (AKA Cloudbot)
+1. In your Streamlabs Dashboard (https://streamlabs.com/dashboard) navigate to the Cloudbot section
+2. Navigate to the Commands tab and click “Add Command” (for this example we will use `!clippy`)
+3. Leave the Template field blank, but enter the command name in the “Command” field
+4. In the Response field, type the following: `{readapi.https://secondubly.tv/clippy/{channel.name}?streamer={1}}`
+5. That's it! You can use the command as follows: `!clippy secondubly`
