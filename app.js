@@ -20,7 +20,7 @@ app.get('/clippy/:host', (req, res) => {
         res.sendFile('index.html', { root: __dirname });
     } else {
         io.emit('shoutout', { host: req.params.host, streamer: req.query.streamer });
-        res.sendStatus(200);        
+        // res.sendStatus(200);        
     }
 });
 
