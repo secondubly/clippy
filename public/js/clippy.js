@@ -69,7 +69,7 @@ async function setClip(visible, clip) {
         frame.setAttribute('src', clip_url);
         frame.setAttribute('allowfullscreen', true);
         // wait a second!
-        await delay(1000);
+        await delay(2000);
         container.classList.add('show')
 
         const duration = (clip.duration * 1000); // add an extra second to show the entire clip
