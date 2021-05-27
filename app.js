@@ -21,6 +21,7 @@ app.get('/clippy/:host', (req, res) => {
     } else {
         io.emit('shoutout', { host: req.params.host, streamer: req.query.streamer });
         // res.sendStatus(200);        
+        res.end();
     }
 });
 
