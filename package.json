@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^4.1.2"
+    "socket.io": "^4.1.2",
+    "tmi.js": "^1.8.3"
   },
   "name": "clippy-shoutouts",
   "description": "Shows a random streamer clip when using a shoutout command",
