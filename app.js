@@ -1,5 +1,4 @@
 const port = 5353;
-const path = require('path');
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
