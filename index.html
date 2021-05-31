@@ -48,12 +48,14 @@
                 // check to make sure the event is for your channel
                 const streamer = response.streamer;
                 const host = '/' + response.host;
+                let duration;
+                response.duration ? duration = response.duration : duration = 15;
                 if (!streamer || !window.location.href.includes(host)) { 
                     return; // if the event is not for your channel, return early
                 }
                 let channel = document.querySelector("#username");
                 channel.textContent = streamer;
-                getClips(streamer).then(_ => {
+                getClips(streamer, undefined, undefined, duration).then(_ => {
                     const clip_data = getRandomWeightedClip(topClips);
                     // if we don't have a clip, do nothing
                     if(clip_data) { setClip(true, clip_data); }

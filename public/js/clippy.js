@@ -55,6 +55,12 @@ function getRandomWeightedClip(clips, percentage = 0.50) {
     // return clips.length - 1; // for testing purposes
 }
 
+function getRandomClip(clips) {
+    const randomIndex = Math.random() * clips.length;
+    return clips[randomIndex];
+
+}
+
 async function setClip(visible, clip) {
     if (visible) {
         let frame = document.querySelector("#stream-clip")
@@ -68,7 +74,7 @@ async function setClip(visible, clip) {
         frame.setAttribute('src', clip_url);
         frame.setAttribute('allowfullscreen', true);
         // wait a second!
-        await delay(2000);
+        await delay(1500);
         container.classList.add('show')
 
         const duration = (clip.duration * 1000); // add an extra second to show the entire clip
