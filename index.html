@@ -46,11 +46,12 @@
             let socket = io.connect('https://secondubly.tv/', {path: "/clippy/socket.io"});
             socket.on('shoutout', (response) => {
                 // check to make sure the event is for your channel
-                const streamer = response.streamer;
-                const host = '/' + response.host;
+                const streamer = response.streamer; // streamer we are shouting out
+                const host = response.host; // stream where the shoutout is occurring
+                const pathnameHost = window.location.pathname.replace(/^\/|\/$/g, '').split('/')
                 let duration;
                 response.duration ? duration = response.duration : duration = 15;
-                if (!streamer || !window.location.href.includes(host)) { 
+                if (!streamer || !pathnameHost.includes(host)) { 
                     return; // if the event is not for your channel, return early
                 }
                 let channel = document.querySelector("#username");
