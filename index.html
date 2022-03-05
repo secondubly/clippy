@@ -1,7 +1,6 @@
 <html>
     <head>
         <title>Shoutout Clips by secondubly</title>
-            <script type="text/javascript" src="https://secondubly.tv/clippy/socket.io/socket.io.js"></script>
             <script type="text/javascript" src="/clippy/js/clippy.js"></script>
             <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet"> 
@@ -42,8 +41,10 @@
             <iframe id="stream-clip" width="1280" height="720">
             </iframe>
         </div>
+
+        <script src="/socket.io/socket.io.js"></script>
         <script>
-            let socket = io.connect('https://secondubly.tv/', {path: "/clippy/socket.io"});
+            const socket = io.connect('<your webpage url goes here>');
             socket.on('shoutout', (response) => {
                 // check to make sure the event is for your channel
                 const streamer = response.streamer; // streamer we are shouting out

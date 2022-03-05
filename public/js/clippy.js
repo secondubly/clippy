@@ -5,20 +5,27 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 // TODO: add support for duration parameter
 async function getClips(username, limit = 100, period = 'all', duration_limit = 15, weighted = true, trending = false) {
     // Note: await/async unsupported in some older browsers (IE/Opera?)
-    let url = `https://api.twitch.tv/kraken/clips/top?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
+    let url = `https://localhost:5353/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
+    let dev_url = `http://localhost:5353/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
 
-    const data = await fetch(`https://api.twitch.tv/kraken/clips/top?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Client-ID': 'h032bgl79pc6sz5ftt7qax12eom1eg',
-            'Accept': 'application/vnd.twitchtv.v5+json'
+    try {
+        const response = await fetch(dev_url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        
+        if(!response.ok) {
+            return new Error(response.text())
+        } else {
+            const data = await response.json();
+            console.log(data.clips);
+            topClips = data.clips.filter(clip => clip.duration < duration_limit);
         }
-    }).then(res => res.json());
-    if (data.clips.length < 1) { return; } // if we don't have any clips, return early
-
-    // if the clip is longer than the duration limit, we don't want it
-    topClips = data.clips.filter(clip => clip.duration < duration_limit);
+    } catch(e) {
+        console.error(`Something went wrong: ${e}`)
+    }
 }
 
 function getRandomWeightedClip(clips, percentage = 0.50) {
@@ -68,7 +75,7 @@ async function setClip(visible, clip) {
 
         // Example Clip URL:
         // https://clips.twitch.tv/embed?clip=ShakingPoliteQuailGingerPower&tt_medium=clips_api&tt_content=embed
-        const clip_url = `https://clips.twitch.tv/embed?clip=${clip.slug}&tt_medium-clips_api&tt_content=embed&parent=${window.location.hostname}&autoplay=true`
+        const clip_url = `${clip.embed_url}&tt_medium-clips_api&tt_content=embed&parent=${window.location.hostname}&autoplay=true`
 
         // display container and iframe
         frame.setAttribute('src', clip_url);
