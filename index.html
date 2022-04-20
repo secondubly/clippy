@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Shoutout Clips by secondubly</title>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
             <script type="text/javascript" src="/clippy/js/clippy.js"></script>
             <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet"> 
@@ -33,18 +34,22 @@
                 text-align: center;
                 margin-bottom: 1em;
             }
+
+            #stream-clip img {
+                margin: 0 auto;
+                width: 200px;
+            }
         </style>
     </head>
     <body>
         <div id="clip-container">
             <p>Check out <span id="username"></span>!</p>
-            <iframe id="stream-clip" width="1280" height="720">
+            <iframe id="stream-clip" width="1280" height="720" src="/clippy/placeholder.html">
             </iframe>
         </div>
 
-        <script src="/socket.io/socket.io.js"></script>
         <script>
-            const socket = io.connect('<your webpage url goes here>');
+            const socket = io.connect('https://secondubly.tv/', {path: "/clippy/socket.io"})
             socket.on('shoutout', (response) => {
                 // check to make sure the event is for your channel
                 const streamer = response.streamer; // streamer we are shouting out
@@ -59,8 +64,12 @@
                 channel.textContent = streamer;
                 getClips(streamer, undefined, undefined, duration).then(_ => {
                     const clip_data = getRandomWeightedClip(topClips);
-                    // if we don't have a clip, do nothing
-                    if(clip_data) { setClip(true, clip_data); }
+                    if(clip_data) { 
+                        setClip(true, clip_data); 
+                    } else {
+                        // if we don't have a clip, display the mod-check placeholder instead
+                        defaultClip()
+                    }
                     // TODO: log the clip name and streamer to server side
                 }).catch((err) => { console.error(err) });
             });

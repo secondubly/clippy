@@ -1,15 +1,17 @@
 let topClips = [];
 let distribution = {}; // for testing purposes
 const delay = ms => new Promise(res => setTimeout(res, ms));
+const FIVE_SECONDS = 5 * 1000;
+const DEFAULT_WIDTH = 1280
+const DEFAULT_HEIGHT = 720
 
 // TODO: add support for duration parameter
 async function getClips(username, limit = 100, period = 'all', duration_limit = 15, weighted = true, trending = false) {
     // Note: await/async unsupported in some older browsers (IE/Opera?)
-    let url = `https://localhost:5353/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
-    let dev_url = `http://localhost:5353/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
+    let url = `https://secondubly.tv/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
 
     try {
-        const response = await fetch(dev_url, {
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -20,7 +22,6 @@ async function getClips(username, limit = 100, period = 'all', duration_limit = 
             return new Error(response.text())
         } else {
             const data = await response.json();
-            console.log(data.clips);
             topClips = data.clips.filter(clip => clip.duration < duration_limit);
         }
     } catch(e) {
@@ -80,8 +81,11 @@ async function setClip(visible, clip) {
         // display container and iframe
         frame.setAttribute('src', clip_url);
         frame.setAttribute('allowfullscreen', true);
+        // forcibly restore default width and height just in case
+        frame.setAttribute('width', DEFAULT_WIDTH);
+        frame.setAttribute('height', DEFAULT_HEIGHT);
         // wait a second!
-        await delay(1500);
+        // await delay(1500);
         container.classList.add('show')
 
         const duration = (clip.duration * 1000); // add an extra second to show the entire clip
@@ -97,10 +101,28 @@ async function setClip(visible, clip) {
         // hide container
         container.classList.remove('show')
 
-        // remove iframe content after 3 seconds
+        // restore default iframe content after 3 seconds
         await delay(500);
-        frame.setAttribute('src', '');
+        frame.setAttribute('src', '/clippy/placeholder.html');
     }
+}
+
+async function defaultClip() {
+    let frame = document.querySelector("#stream-clip")
+    let container = document.querySelector('#clip-container');
+
+    frame.setAttribute('width', '350')
+    frame.setAttribute('height', '350')
+    frame.setAttribute('allowfullscreen', true);
+    // wait a second!
+    // await delay(1500);
+    container.classList.add('show');
+
+    const duration = (FIVE_SECONDS); // add an extra second to show the entire clip
+    setTimeout(() => {
+        // auto-hide clip after it finishes
+        container.classList.remove('show');
+    }, duration);
 }
 
 

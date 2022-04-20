@@ -13,7 +13,9 @@ const port = 5353;
 const app = express();
 const server = createServer(app);
 // const io = new Server(server, { path: '/clippy/socket.io' });
-const io = new Server(server);
+const io = new Server(server, {
+    path: '/clippy/socket.io'
+});
 const __dirname = new URL('.', import.meta.url).pathname;
 
 app.use('/clippy', express.static(__dirname + 'public'));
@@ -30,6 +32,10 @@ app.get('/clippy/getclips', async (req, res) => {
     const username = req.query.channel;
     const limit = req.query.limit;
 
+    if(!username || !limit) {
+        res.sendStatus(400);
+        return;
+    }
     // get bearer token
     const token = await getBearerToken();
     const id = await getUserID(username, token);
@@ -37,8 +43,11 @@ app.get('/clippy/getclips', async (req, res) => {
     res.json({
         clips: clips.data
     });
+    res.end();
 })
-
+app.get('/clippy/placeholder.html', (req, res) => {
+    res.sendFile(__dirname + 'placeholder.html');
+})
 app.get('/clippy/:host', (req, res) => {
     if(isBlank(req.query.streamer) && req.params.host) {
         res.sendFile('index.html', { root: __dirname });
