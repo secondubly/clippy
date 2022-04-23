@@ -21,8 +21,16 @@ async function getClips(username, limit = 100, period = 'all', duration_limit = 
         if(!response.ok) {
             return new Error(response.text())
         } else {
+            // regex
+            const regex = /(-\D*-\d+x\d+.\D*)/g;
+            const file_ext = '.mp4';
+
             const data = await response.json();
             topClips = data.clips.filter(clip => clip.duration < duration_limit);
+            topClips.forEach((clip) => {
+                clip.mp4 = clip.thumbnail_url.replace(regex, file_ext);
+                delete clip.thumbnail_url // remove the thumbnail, we don't need it
+            })
         }
     } catch(e) {
         console.error(`Something went wrong: ${e}`)
@@ -69,30 +77,30 @@ function getRandomClip(clips) {
 
 }
 
-async function setClip(visible, clip) {
+async function playClip(visible, clipSrc) {
     if (visible) {
-        let frame = document.querySelector("#stream-clip")
+        let video = document.querySelector("#stream-clip")
         let container = document.querySelector('#clip-container');
 
-        // Example Clip URL:
-        // https://clips.twitch.tv/embed?clip=ShakingPoliteQuailGingerPower&tt_medium=clips_api&tt_content=embed
-        const clip_url = `${clip.embed_url}&tt_medium-clips_api&tt_content=embed&parent=${window.location.hostname}&autoplay=true`
+        // Example twitch clip mp4 URL:
+        // https://clips-media-assets.twitch.tv/157589949.mp4
 
-        // display container and iframe
-        frame.setAttribute('src', clip_url);
-        frame.setAttribute('allowfullscreen', true);
-        // forcibly restore default width and height just in case
-        frame.setAttribute('width', DEFAULT_WIDTH);
-        frame.setAttribute('height', DEFAULT_HEIGHT);
-        // wait a second!
-        // await delay(1500);
-        container.classList.add('show')
 
-        const duration = (clip.duration * 1000); // add an extra second to show the entire clip
-        setTimeout(() => {
-            // auto-hide clip after it finishes
-            setClip(false, null);
-        }, duration);
+        // create source element
+        createClipSrc(video, clipSrc.mp4);
+        video.style.display = 'block';
+
+        // set container to be visible
+        container.classList.add('show');
+        video.play();
+        
+        // remove source when video has ended
+        video.onended = () => {
+            video.muted = true;
+            container.classList.remove('show'); // hide container
+            video.style.display = 'none'; // hide video container again
+            video.removeAttribute('src'); // remove video source
+        }
     } else {
         // Don't show clip box
         let container = document.querySelector('#clip-container');
@@ -108,21 +116,27 @@ async function setClip(visible, clip) {
 }
 
 async function defaultClip() {
-    let frame = document.querySelector("#stream-clip")
     let container = document.querySelector('#clip-container');
-
-    frame.setAttribute('width', '350')
-    frame.setAttribute('height', '350')
-    frame.setAttribute('allowfullscreen', true);
-    // wait a second!
-    // await delay(1500);
+    let placeholder = document.querySelector('#placeholder');
+    
+    placeholder.classList.add('show');
     container.classList.add('show');
 
-    const duration = (FIVE_SECONDS); // add an extra second to show the entire clip
+    const duration = (FIVE_SECONDS);
     setTimeout(() => {
-        // auto-hide clip after it finishes
+        // auto-hide image after 5 seconds
         container.classList.remove('show');
+        placeholder.classList.remove('show');
     }, duration);
+}
+
+function createClipSrc(element, src, type = 'video/mp4') {
+    let source = document.createElement('source');
+    element.src = src;
+    source.type = type;
+
+    element.appendChild(source);
+    element.muted = false; // unmute the video
 }
 
 

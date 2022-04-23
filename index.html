@@ -34,7 +34,17 @@
                 text-align: center;
                 margin-bottom: 1em;
             }
-
+            #placeholder {
+                visibility: hidden;
+                width: 200px;
+            }
+            #placeholder.show {
+                visibility: visible;
+            }
+            #stream-clip {
+                display: none;
+                margin: 0 auto;
+            }
             #stream-clip img {
                 margin: 0 auto;
                 width: 200px;
@@ -44,8 +54,8 @@
     <body>
         <div id="clip-container">
             <p>Check out <span id="username"></span>!</p>
-            <iframe id="stream-clip" width="1280" height="720" src="/clippy/placeholder.html">
-            </iframe>
+            <video id="stream-clip" width="1280" height="720" autoplay></video>
+            <img id="placeholder" src="img/mod-check.gif" />
         </div>
 
         <script>
@@ -60,14 +70,17 @@
                 if (!streamer || !pathnameHost.includes(host)) { 
                     return; // if the event is not for your channel, return early
                 }
+                
                 let channel = document.querySelector("#username");
                 channel.textContent = streamer;
                 getClips(streamer, undefined, undefined, duration).then(_ => {
                     const clip_data = getRandomWeightedClip(topClips);
                     if(clip_data) { 
-                        setClip(true, clip_data); 
+                        console.info('Using Clip ', clip_data);
+                        playClip(true, clip_data); 
                     } else {
                         // if we don't have a clip, display the mod-check placeholder instead
+                        console.info('No eligible clips found.');
                         defaultClip()
                     }
                     // TODO: log the clip name and streamer to server side
