@@ -1,6 +1,9 @@
 import { createClient } from "redis"
 import { STATUS_CODES } from 'http'
 import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+dotenv.config(); // due to import execution ordering, this file gets handled before anything uses process.env variables, so configure them here
+
 
 const TWITCH_VALIDATE_URL = 'https://id.twitch.tv/oauth2/validate'
 const TWITCH_OAUTH_URL = `https://id.twitch.tv/oauth2/token`

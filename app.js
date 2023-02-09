@@ -4,10 +4,8 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import dotenv from 'dotenv';
 import { Twitch } from './twitch.js';
 
-dotenv.config();
 const twitch = new Twitch()
 
 const port = process.env.PORT || 5353
