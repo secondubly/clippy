@@ -6,10 +6,10 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import { Twitch } from './twitch.js';
+
 dotenv.config();
 const twitch = new Twitch()
 
-const twitch_clips_url = `https://api.twitch.tv/helix/clips`
 const port = process.env.PORT || 5353
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

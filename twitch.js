@@ -2,12 +2,19 @@ import { createClient } from "redis"
 import { STATUS_CODES } from 'http'
 import fetch from 'node-fetch';
 
-const redisClient = createClient()
-await redisClient.connect();
-
 const TWITCH_VALIDATE_URL = 'https://id.twitch.tv/oauth2/validate'
 const TWITCH_OAUTH_URL = `https://id.twitch.tv/oauth2/token`
 const ONE_HOUR = 60 * 60 // convert 1 hour to seconds
+
+const redisClient = createClient({
+    socket: {
+        host: process.env.REDIS_URL,
+        port: process.env.REDIS_PORT
+    },
+    password: process.env.REDIS_PASSWORD || ''
+})
+
+redisClient.connect()
 
 export class Twitch {
     constructor() {
