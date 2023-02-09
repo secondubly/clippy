@@ -8,8 +8,7 @@ const DEFAULT_HEIGHT = 720
 // TODO: add support for duration parameter
 async function getClips(username, limit = 100, period = 'all', duration_limit = 15, weighted = true, trending = false) {
     // Note: await/async unsupported in some older browsers (IE/Opera?)
-    // let url = `https://.tv/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
-    let url = `http://localhost:5353/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
+    let url = `/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
 
     try {
         debugger
@@ -21,6 +20,7 @@ async function getClips(username, limit = 100, period = 'all', duration_limit = 
         })
         
         if(!response.ok) {
+            console.error('Something went wrong', response)
             return new Error(response.text())
         } else {
             // regex
