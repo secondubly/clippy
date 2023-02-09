@@ -1,6 +1,6 @@
-# Clippy-Shoutouts
+# Clippy
 
-A stream overlay that selects a 15 second (or less) weighted-random top clip from a given channel.
+A stream overlay API that selects a 15 second (or less) weighted-random top clip from a given channel.
 
 # Instructions
 
