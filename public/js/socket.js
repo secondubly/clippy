@@ -21,7 +21,8 @@ function connect (roomName) {
         return null // TODO: error handling?
     }
 
-    return io('localhost:5353', {
+    console.info('URL Origin', window.location.origin)
+    return io(window.location.origin, {
         query: {
             'host': roomName
         }
@@ -38,7 +39,11 @@ function handleNoConnect() {
 
 function handleNoConnectFallback() {
     console.warn("No connection to localhost, disconnecting");
+    socket.on('disconnect', (reason) => {
+        socket.disconnect()
+    })
     socket = null
+    return
     // decide what to do when you can't connect to either
 }
 
