@@ -14,7 +14,9 @@ const __dirname = dirname(__filename);
 
 const app = express()
 const server = createServer(app)
-const io = new Server(server)
+const io = new Server(server, {
+    path: '/clippy/socket.io'
+})
 
 // EXPRESS ROUTING
 app.use('/clippy', express.static(__dirname + '/public')); // /clippy will point to all the needed backend files

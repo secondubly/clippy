@@ -1,13 +1,11 @@
 const pathnameHostArray = window.location.pathname.replace(/^\/|\/$/g, '').split('/')
 const pathnameHost = pathnameHostArray.at(-1)
-const socket = connect(pathnameHost)
+let socket = connect(pathnameHost)
 
 // Listeners
-socket.on('connect', () => {
-    console.log('a user connected')
-});
+socket.on('connect', onConnect);
 
-socket.on('disconnect', (reason) => {
+socket.on('disconnect', (_) => {
     console.log('a user disconnected')
 })
 
@@ -21,30 +19,34 @@ function connect (roomName) {
         return null // TODO: error handling?
     }
 
-    console.info('URL Origin', window.location.origin)
-    return io(window.location.origin, {
+    return io.connect(window.location.origin, {
+        path: '/clippy/socket.io',
         query: {
             'host': roomName
-        }
+        },
+        reconnection: false // we will handle reconnection logic ourselves
     })
 }
 
-function handleNoConnect() {
+function onConnect () {
+    console.log('socket connected')
+}
+
+function handleNoConnect () {
     console.warn("No connection to prod environment"); // prod environment url is redacted for safety
-    socket = io('http://localhost:5353');
+    socket = io('http://localhost:5353'); // attempt to connect to dev environment
     socket.on('connect_error', handleNoConnectFallback);
     socket.on('connect_timeout', handleNoConnectFallback);
     socket.on('connect', onConnect);
 }
 
-function handleNoConnectFallback() {
+function handleNoConnectFallback () {
     console.warn("No connection to localhost, disconnecting");
     socket.on('disconnect', (reason) => {
+        socket.io.reconnection(false) // stop reconnecting
         socket.disconnect()
     })
-    socket = null
     return
-    // decide what to do when you can't connect to either
 }
 
 socket.on('shoutout', (response) => {

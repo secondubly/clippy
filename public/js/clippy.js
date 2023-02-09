@@ -11,7 +11,6 @@ async function getClips(username, limit = 100, period = 'all', duration_limit = 
     let url = `/clippy/getclips?channel=${username}&limit=${limit}&period=${period}&trending=${trending}`
 
     try {
-        debugger
         const response = await fetch(url, {
             method: 'GET',
             headers: {
