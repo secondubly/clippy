@@ -1,10 +1,11 @@
-<html>
+<!-- <html>
     <head>
         <title>Shoutout Clips by secondubly</title>
-            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+            <script type="text/javascript" src="/clippy/js/socket.js"></script>
             <script type="text/javascript" src="/clippy/js/clippy.js"></script>
             <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet"> 
+            <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet"> 
         <style type="text/css">
             iframe {
                 border: 0;
@@ -57,35 +58,67 @@
             <video id="stream-clip" width="1280" height="720" autoplay></video>
             <img id="placeholder" src="img/mod-check.gif" />
         </div>
+    </body>
+</html> -->
 
-        <script>
-            const socket = io.connect('https://secondubly.tv/', {path: "/clippy/socket.io"})
-            socket.on('shoutout', (response) => {
-                // check to make sure the event is for your channel
-                const streamer = response.streamer; // streamer we are shouting out
-                const host = response.host; // stream where the shoutout is occurring
-                const pathnameHost = window.location.pathname.replace(/^\/|\/$/g, '').split('/')
-                let duration;
-                response.duration ? duration = response.duration : duration = 15;
-                if (!streamer || !pathnameHost.includes(host)) { 
-                    return; // if the event is not for your channel, return early
-                }
-                
-                let channel = document.querySelector("#username");
-                channel.textContent = streamer;
-                getClips(streamer, undefined, undefined, duration).then(_ => {
-                    const clip_data = getRandomWeightedClip(topClips);
-                    if(clip_data) { 
-                        console.info('Using Clip ', clip_data);
-                        playClip(true, clip_data); 
-                    } else {
-                        // if we don't have a clip, display the mod-check placeholder instead
-                        console.info('No eligible clips found.');
-                        defaultClip()
-                    }
-                    // TODO: log the clip name and streamer to server side
-                }).catch((err) => { console.error(err) });
-            });
-        </script>
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Hello!</title>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+      <script type="text/javascript" src="/clippy/js/clippy.js"></script>
+      <script type="text/javascript" src="/clippy/js/socket.js"></script>
+      <style type="text/css">
+        iframe {
+            border: 0;
+        }
+        html, body {
+            background-color: rgba(0, 0, 0, 0);
+            overflow: hidden;
+            color: #fff;
+            text-transform: uppercase;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+        }
+        #clip-container {
+            opacity: 0;
+            font-size: 3.75em;
+            -webkit-transition: opacity 1900ms;
+            -o-transition: opacity 1900ms;
+            transition: opacity 1900ms;
+        }
+        #clip-container.show {
+            opacity: 1;
+        }
+        #clip-container p {
+            text-align: center;
+            margin-bottom: 1em;
+        }
+        #placeholder {
+            visibility: hidden;
+            width: 200px;
+        }
+        #placeholder.show {
+            visibility: visible;
+        }
+        #stream-clip {
+            display: none;
+            margin: 0 auto;
+        }
+        #stream-clip img {
+            margin: 0 auto;
+            width: 200px;
+        }
+    </style>
+   </head>
+   <body>
+    <div id="clip-container">
+        <p>Check out <span id="username"></span>!</p>
+        <video id="stream-clip" width="1280" height="720" autoplay></video>
+        <img id="placeholder" src="img/mod-check.gif" />
+    </div>
     </body>
 </html>
