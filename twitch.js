@@ -54,13 +54,15 @@ export class Twitch {
             })
 
             res = await res.json()
-            if (res.expires_in <= ONE_HOUR) {
-                // token expires relatively soon, let's get a new one
+            if (!res.ok || res.expires_in <= ONE_HOUR) {
+                // looks like something went wrong, let's just try to get a new token instead
+                console.warn('Response was either 400 status, or the token is expiring soon...getting a new one.')
                 this.makeClientCredentials()
-            } else {
-                const hours = Math.floor(res.expires_in / 3600)
-                console.log(`Token is valid, expires in ${hours} hours.`)
+                return
             }
+
+            const hours = Math.floor(res.expires_in / 3600)
+            console.log(`Token is valid, expires in ${hours} hours.`)
         } catch (e) {
             console.log('Token validation error', e)
             this.makeClientCredentials()
