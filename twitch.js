@@ -129,7 +129,6 @@ export class Twitch {
 
     async getClips(id, limit = 100) {
         const url = `https://api.twitch.tv/helix/clips?broadcaster_id=${id}&first=${limit}`
-        console.log(`Access Token: ${process.env.ACCESS_TOKEN}`)
         try {
             const response = await fetch(url, {
                 method: 'GET',
