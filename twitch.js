@@ -53,10 +53,15 @@ export class Twitch {
                 }
             })
 
+            if (!res.ok) {
+                console.log('Failed to successfully validate token', res.body)
+                throw new Error('Token validation failed.')
+            }
+
             res = await res.json()
-            if (!res.ok || res.expires_in <= ONE_HOUR) {
+            if (res.expires_in <= ONE_HOUR) {
                 // looks like something went wrong, let's just try to get a new token instead
-                console.warn('Response was either 400 status, or the token is expiring soon...getting a new one.')
+                console.warn('The token is expiring soon...getting a new one.')
                 this.makeClientCredentials()
                 return
             }
@@ -85,7 +90,7 @@ export class Twitch {
                 }
             })
 
-            if (res.statusText !== STATUS_CODES[200]) {
+            if (!res.ok) {
                 console.error('Failed to get a token', res.body)
                 // most likely an unrecoverable error, so just return
                 return
@@ -110,7 +115,7 @@ export class Twitch {
                 headers: {'Client-Id':  process.env.CLIENT_ID, 'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`}
             });
         
-            if(response.statusText !== STATUS_CODES[200]) {
+            if(!response.ok) {
                 console.error('Could not retrieve user id', response.body)
                 return response.status
             }
@@ -124,13 +129,14 @@ export class Twitch {
 
     async getClips(id, limit = 100) {
         const url = `https://api.twitch.tv/helix/clips?broadcaster_id=${id}&first=${limit}`
+        console.log(`Access Token: ${process.env.ACCESS_TOKEN}`)
         try {
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {'Client-Id':  process.env.CLIENT_ID, 'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`}
             })
         
-            if(response.statusText != STATUS_CODES[200]) {
+            if(!response.ok) {
                 console.error('Error getting twitch clips', response.body)
                 return response.status;
             }

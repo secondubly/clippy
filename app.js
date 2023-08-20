@@ -62,11 +62,6 @@ app.get('/clippy/:host', (req, res) => {
     }
 });
 
-// HELPER FUNCTIONS
-function isBlank(str) {
-    return (!str || /^\s*$/.test(str));
-}
-
 // SOCKET.IO LISTENERS
 io.on('connection', (socket) => {
     const room = socket.handshake['query']['host']
