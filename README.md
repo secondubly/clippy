@@ -36,7 +36,7 @@ Below I've included steps to use this as a command in some popular Twitch bots, 
 5. That's it! You can use the command as follows: `!clippy <a username here>`
 
 ## Streamelements Chat Bot
-1. In your Streamelements Dashboard (https://streamelements.com/dashboard) navigate to the Chat Bot asection
+1. In your Streamelements Dashboard (https://streamelements.com/dashboard) navigate to the Chat Bot section
 2. Navigate to the Chat commands section and click the “Custom Commands” tab, then click “Add New Command”
 3. Make sure the “New command” radio button is filled in, and enter the command name in the command name field (it should say “what triggers the response?”) beneath it.
 4. In the response field, type the following: `${urlfetch https://secondubly.tv/clippy/${channel.display_name}?streamer=${1}}`
