@@ -1,3 +1,7 @@
+# **NOTICE**
+This project has been decomissioned and will be eventually folded into [digittron](https://github.com/secondubly/digittron-server). It is kept online for posterity and for anyone who would like to reference it.
+
+
 # Clippy
 
 A stream overlay API that selects a 15 second (or less) weighted-random top clip from a given channel.
